@@ -125,15 +125,15 @@ def main_menu():
 
             row_data = [
                 filename, 
-                ", ".join(s.decode() for s in pe_info['urls']),  # Decode byte objects to strings
-                ", ".join(s.decode() for s in pe_info['domains']),  # Decode byte objects to strings
-                ", ".join(s.decode() for s in pe_info['ips']),  # Decode byte objects to strings
+                ", ".join(s.decode() for s in pe_info['urls']),  
+                ", ".join(s.decode() for s in pe_info['domains']),  
+                ", ".join(s.decode() for s in pe_info['ips']),  
                 pe_info['architecture'], 
                 str(pe_info['general_entropy']), 
                 str(pe_info['file_size']), 
                 str(pe_info['num_sections']), 
                 str(pe_info['compilation_date']), 
-                ", ".join(s.decode() for s in pe_info['dlls']),  # Decode byte objects to strings
+                ", ".join(s.decode() for s in pe_info['dlls']),  
                 str(pe_info['packed']), 
                 pe_info['packing_algorithm']
             ]
@@ -222,13 +222,13 @@ def analyze_file(filename):
             doc = Document(filename)
             text = ' '.join(paragraph.text for paragraph in doc.paragraphs)
             language = detect(text)
-            num_pages = len(doc.paragraphs)  # This is an approximation
-            contains_macros = has_macros(filename)  # Renamed variable
+            num_pages = len(doc.paragraphs)  
+            contains_macros = has_macros(filename)  
 
             table.add_column("Language")
             table.add_column("Number of Pages")
             table.add_column("Contains Macros")
-            row_data.extend([language, str(num_pages), "Yes" if contains_macros else "No"])  # Use the renamed variable
+            row_data.extend([language, str(num_pages), "Yes" if contains_macros else "No"])  
         bar()
 
         table.add_row(*row_data)
