@@ -1,13 +1,16 @@
-from rich import print
-from rich.table import Table
-
 import magic
 import zipfile
+import urllib.parse
+import re
+from PyPDF2 import PdfReader
 import rarfile
+import pdfplumber
 import py7zr
 
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+from rich import print as rprint
+from rich.table import Table
 
 def print_greeting():
     print('''
@@ -30,6 +33,19 @@ d88E`"888E`   8888  888R   d88E`"888E`   8888  888R   x88:  `)8b.   8888    .@88
 
 print_greeting()
 
+def extract_info_from_pdf(file_path):
+    with pdfplumber.open(file_path) as pdf:
+        text = '\n'.join(page.extract_text() for page in pdf.pages)
+
+        # Write the extracted text to a .txt file
+        with open('extracted_text.txt', 'w') as f:
+            f.write(text)
+
+    urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', text)
+    ips = re.findall(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b', text)
+    domains = [urllib.parse.urlparse(url).netloc for url in urls]
+
+    return urls, ips, domains
 
 def identify_file_type(file_path):
     mime = magic.Magic(mime=True)
@@ -56,21 +72,34 @@ def is_password_protected(file_path, file_type):
                 z.test()
         except py7zr.exceptions.Bad7zFile:
             return True
-    else:
-        return False
-
+    elif "pdf" in file_type:
+        try:
+            with pdfplumber.open(file_path) as pdf:
+                text = '\n'.join(page.extract_text() for page in pdf.pages)
+            return False
+        except:
+            return True
+    
 Tk().withdraw()
 filename = askopenfilename()
 
 file_type = identify_file_type(filename)
 is_protected = is_password_protected(filename, file_type)
 
-table = Table(show_header=True, header_style="bold magenta") #Since I am dealing with Runtime errors I used the rich library to make the output more readable.
+table = Table(show_header=True, header_style="bold magenta")
 table.add_column("File Path")
 table.add_column("File Type")
 table.add_column("Password Protected")
 
-table.add_row(filename, file_type, "Yes" if is_protected else "No")
+row_data = [filename, file_type, "Yes" if is_protected else "No"]
 
+if "pdf" in file_type and not is_protected:
+    urls, ips, domains = extract_info_from_pdf(filename)
+    table.add_column("URLs")
+    table.add_column("IP Addresses")
+    table.add_column("Domain Names")
+    row_data.extend([", ".join(urls), ", ".join(ips), ", ".join(domains)])
 
-print(table)
+table.add_row(*row_data)
+
+rprint(table)
