@@ -1,13 +1,12 @@
-from rich import print
-from rich.table import Table
-
 import magic
 import zipfile
 import rarfile
 import py7zr
-
+from PyPDF2 import PdfFileReader
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+from rich import print as rprint
+from rich.table import Table
 
 def print_greeting():
     print('''
@@ -56,6 +55,13 @@ def is_password_protected(file_path, file_type):
                 z.test()
         except py7zr.exceptions.Bad7zFile:
             return True
+    elif "pdf" in file_type:
+        try:
+            with open(file_path, 'rb') as file:
+                reader = PdfFileReader(file)
+                return reader.isEncrypted
+        except:
+            return False
     else:
         return False
 
@@ -73,4 +79,4 @@ table.add_column("Password Protected")
 table.add_row(filename, file_type, "Yes" if is_protected else "No")
 
 
-print(table)
+rprint(table)
