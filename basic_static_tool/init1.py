@@ -2,10 +2,11 @@ import magic
 import zipfile
 import urllib.parse
 import re
+from PyPDF2 import PdfReader
 import rarfile
 import pdfplumber
 import py7zr
-from PyPDF2 import PdfReader
+
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from rich import print as rprint
@@ -73,14 +74,12 @@ def is_password_protected(file_path, file_type):
             return True
     elif "pdf" in file_type:
         try:
-            with open(file_path, 'rb') as file:
-                reader = PdfFileReader(file)
-                return reader.isEncrypted
-        except:
+            with pdfplumber.open(file_path) as pdf:
+                text = '\n'.join(page.extract_text() for page in pdf.pages)
             return False
-    else:
-        return False
-
+        except:
+            return True
+    
 Tk().withdraw()
 filename = askopenfilename()
 
@@ -94,7 +93,7 @@ table.add_column("Password Protected")
 
 row_data = [filename, file_type, "Yes" if is_protected else "No"]
 
-if "pdf" in file_type:
+if "pdf" in file_type and not is_protected:
     urls, ips, domains = extract_info_from_pdf(filename)
     table.add_column("URLs")
     table.add_column("IP Addresses")
