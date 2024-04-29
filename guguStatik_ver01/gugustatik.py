@@ -214,10 +214,13 @@ def analyze_file(filename):
 
         if "pdf" in file_type and not is_protected:
             urls, ips, domains = extract_info_from_pdf(filename)
+            pdf_page_count = len(PdfReader(filename).pages)
+            pdf_page_count= math.ceil(pdf_page_count)
             table.add_column("URLs")
             table.add_column("IP Addresses")
             table.add_column("Domain Names")
-            row_data.extend([", ".join(urls), ", ".join(ips), ", ".join(domains)])
+            table.add_column("Page Count")
+            row_data.extend([", ".join(urls), ", ".join(ips), ", ".join(domains), (str(pdf_page_count))])
         elif "doc" in file_type and not is_protected:
             doc = Document(filename)
             text = ' '.join(paragraph.text for paragraph in doc.paragraphs)
