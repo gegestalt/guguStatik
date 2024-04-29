@@ -123,6 +123,12 @@ def main_menu():
             table.add_column("DLLs")
             table.add_column("Packed")
             table.add_column("Packing Algorithm")
+            for i, section_info in enumerate(pe_info['sections_info'], start=1):
+                print(f"\nSection {i}:")
+                print(f"Name: {section_info['Name']}")
+                print(f"Entropy: {section_info['Entropy']}")
+                print(f"Virtual Size: {section_info['Virtual Size']}")
+                print(f"Raw Size: {section_info['Raw Size']}")
 
             row_data = [
                 filename, 
@@ -160,6 +166,18 @@ def get_tlds():
     tlds = requests.get('https://data.iana.org/TLD/tlds-alpha-by-domain.txt')
     return tlds.text.split('\n')[1:-1]
 
+def analyze_sections(pe):
+    sections_info = []
+    for section in pe.sections:
+        section_info = {
+            "Name": section.Name.decode(errors='ignore'),
+            "Entropy": entropy(section.get_data()),
+            "Virtual Size": section.Misc_VirtualSize,
+            "Raw Size": len(section.get_data())
+        }
+        sections_info.append(section_info)
+    return sections_info
+
 def extract_info_from_pe(filename):
     pe = pefile.PE(filename)
 
@@ -184,7 +202,7 @@ def extract_info_from_pe(filename):
     # 3.3
     packed = any(s.get_entropy() > 7 for s in pe.sections)
     packing_algorithm = 'Unknown'
-
+    sections_info = analyze_sections(pe)
     return {
         'urls': urls,
         'domains': domains,
@@ -198,6 +216,7 @@ def extract_info_from_pe(filename):
         'dlls': dlls,
         'packed': packed,
         'packing_algorithm': packing_algorithm,
+        'sections_info': sections_info,
     }
 def analyze_file(filename):
     with alive_bar(4, title='Analyzing...') as bar:
