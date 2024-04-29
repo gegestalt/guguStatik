@@ -1,6 +1,7 @@
 import magic
 import zipfile
 import urllib.parse
+import pandas as pd 
 from docx import Document
 from langdetect import detect
 from oletools.olevba import VBA_Parser
