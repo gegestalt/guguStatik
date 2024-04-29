@@ -1,0 +1,734 @@
+46.20.159.255
+46.45.191.255
+• 46.104.255.255. 172.31.255.255
+75.0.67.42
+126.65.142.245
+103.172.204.35
+59.138.97.205
+18.100.108.183
+133.115.173.8
+53.119.139.17
+112.110.177.222
+2.247.234.112
+76.222.11.26
+SEC 530 IDA and Ollydbg
+Before we start, please apply the following instructions.
+Change your background image!!
+How to change the background image: Win-7
+https://www.dummies.com/computers/operating-systems/windows-7/howto
+-change-the-desktop-background-in-windows-7/
+Win-10 https://www.dummies.com/computers/operating-systems/windows-
+10/how-t o-change-the-desktop-background-in-windows-10/
+Don’t forget to include your machine system information for every
+screenshot.
+How to check system information on Windows 7: msinfo32 command
+https://www.youtube.com/watch?v=-_hfFTV0axI
+In Window 10
+Type “system information“ into the initial search box, and then select the
+result.
+https://www.youtube.com/watch?v=wNTWNh4WyQk Take
+a look at the second way in the link above.
+Don’t forget to take a snapshot before we start!!!
+No SCREENSHOT no points!
+Read the questions carefully!
+If you don’t have the tools, then install them!
+SUBMISSION MUST BE A PDF FILE!!!
+The objective of this lab is to familiarize yourself with IDA Pro.
+Files:
+https://drive.google.com/file/d/1afN4IFw_kbVCxzBOf-zd-IvfBsva29ez/view?usp=sharing
+Binary : a1.exe
+1.1 Use Basic Static Analysis to this malware’s (interesting) internet
+related imports . What conclusions can you draw from them?
+Explanation is expected!
+Screenshot is expected!
+1.2 In IDA, analyse the following functions. 1)->sub_403611
+2)>sub_40122B
+3)->sub_402C7A
+1.2.1: What is the purpose of each function?
+Explanation is expected!
+Screenshot is expected!
+1. 2.2:Write the C code for the last two functions (2-3). C code
+and explanation is expected! Screenshot is expected!
+Binary : a2.exe
+2.1 In IDA, analyze all the functions called by main. 2.1.1: What is the
+purpose of each function? C code and Explanation is expected!
+Screenshot is expected
+2. 1.2:Write the C code for all.
+C code and Explanation is expected! Screenshot is expected
+3) Please download exe from the zip file and analyze the exe to
+answer the following questions.
+Link : https://drive.google.com/file/d/1seA9fFl_Bw9N4a3sTg0F3YuzB-
+poeCk a/view?usp=sharing
+Please be careful!! Real malware inside !!!!! This is not a worm as far
+as I know.
+Password: malware
+3.1 Find the directory where malware resides after running it
+Take a screenshot and explain the way you found it 3.2 Find out what
+has been added into the registry? Take a screenshot and explain the
+way you found it 3.3 Find out how this malware achieved persistence?
+Take a screenshot and explain the way you found it Also explained the
+persistence mechanism.
+Screenshots needed! For all the answers !
+Download the following : No Google account is needed ! Download
+this to WIN10
+https://drive.google.com/file/d/1fPLZ2ePdSRr5qBjzo1razQiMoBF1GG
+1d/view?usp=sharing
+4.1 Describe the C constructs that you see in the 1.exe
+(Convert 1.bin to 1.exe).
+Screenshot is needed! Explain your answer.
+4.2 Write C code and explain the purpose of the code.
+What is exe trying to do?
+C code and assembly explanations are expected. Explain
+your answer.Screenshots needed!
+5.1 In this question, describe the C constructs that you see in the
+2.exe (Convert 2.bin to 2.exe). Screenshot is
+needed! Explain your answer.
+5.2 Write C code and explain the purpose of the code. What is
+exe trying to do?
+C code and assembly explanations are expected. Explain
+your answer.Screenshots needed!
+6.1 In this question, describe the C constructs that you see in the
+3.exe (Convert 3.bin to 3.exe). Screenshot is
+needed! Explain your answer.
+6.2 Explain the purpose of the code. What is exe trying to do?
+Explain your answer. Screenshots needed!
+7.1. Discover how you would run the executable 4.exe (Convert 4.bin
+to 4.exe)so that it prints “Yes!!!”.
+What kind of input do you need ?
+First find a way to run exe on the command line(cmd) then find a way
+to print “Yes!!!”.
+Ollydbg
+To download OllyDbg, you must go to OllyDbg website (https://www.ollydbg.de/) and the
+Download part. In the bottom you will see Download OllyDbg 1.10 (final version). Please
+download the OllyDbg and extract it in a dedicated folder. After downloading and extracting into
+a dedicated file, you can run it by double clicking on ollydbg.exe.
+So What is OllyDbg ?
+• ● An x86 debugger developed by Oleh Yuschuk.
+• ● Provides the ability to analyze malware while it is running.
+• ● Commonly used by malware analysts and reverse engineers because
+○ it’s free, ○ it’s easy to use, ○ and it has many plugins that
+o o o
+extend its capabilities. Small History
+• ● OllyDbg was developed more than a decade ago
+• ● First used to crack software and to develop exploits
+○ Before malware analysis
+● The OllyDbg 1.1 source code was purchased by Immunity and rebranded as Immunity
+Debugger
+● The two products are very similar
+○ Everything you’ll learn in this chapter applies to both.
+● The only item of note is that many plugins for OllyDbg won’t automatically run in
+ImmDbg.
+Loading Malware
+● There are several ways to begin debugging malware with OllyDbg. ○ You can load
+executables and even DLLs directly.
+• ● If the malware is already running, you can attach OllyDbg to the running process.
+• ● OllyDbg provides a flexible system to run malware with command-line options or to
+execute specific functionality within a DLL. • ●
+File, Open (Easiest way to debug malware)
+○ then browse to the executable you wish to load ● Add command-line arguments if needed ○
+Specify them in the Arguments field of the Open dialog.
+● During loading is the only time you can pass command-line arguments to OllyDbg.
+Opening an Executable (EXE)
+• ● Once you’ve opened an executable,
+○ OllyDbg will load the binary using its own loader. ○ This
+o o
+works similarly to the way that the Windows OS loads a file.
+• ● OllyDbg will stop at the entry point, WinMain, if it can be determined.
+• ● Otherwise it will break at the entry point defined in the PE Header
+Attaching to a Running Process
+attach.
+● In addition to opening an executable directly, you can attach OllyDbg to a running process. ○
+Useful when you want to debug running malware.
+• ● To attach OllyDbg to a process, select “File” then “Attach”
+• ● This will bring up a menu in which you can select the process to which you want to
+● OllyDbg breaks in and pauses the program and all threads
+○ If you catch it in DLL, set a breakpoint on access to the entire code section to get to
+the interesting code.
+The OllyDbg Interface
+• ● As soon as you load a program into OllyDbg, you will see four windows filled with
+information that you will find useful for malware analysis. • ● Disassembler
+window
+o
+○ This window shows the debugged program’s code
+o ○ Current instruction pointer with several instructions before and after it. o ○ Next instruction
+to be executed will be highlighted in this window.
+o
+○ To modify or add instructions or data
+■ press the spacebar within this window.
+• ● Registers window o ○ This window shows the current state of the registers for the
+debugged program. o ○ As in the disassembler window, you can modify data in the
+registers window as
+the program is debugged by right-clicking any register value and selecting Modify.
+• ● Stack window
+○ This window shows the current state of the stack in memory for the thread being
+o
+debugged.
+selecting Modify.
+○ OllyDbg places useful comments on some stack locations that describe the arguments
+o
+placed on the stack
+o
+○ You can manipulate stacks in this window by right-clicking a stack location and
+• ● Memory dump window
+o
+○ This window shows a dump of live memory for the debugged process.
+○ Ctrl+G to go to a memory location ○ To edit memory in this window, right-click it
+o o
+and choose “Binary” then “Edit”.
+Searching in Ollydbg (Strings)
+• ● In Ollydbg, in the "Assembly Code" pane, right-click. Point to "Search for".
+• ● Click "All referenced text strings", as shown below.
+Searching in Ollydbg (Imports)
+• ● In Ollydbg, in the "Assembly Code" pane, right-click. Point to "Search for".
+• ● Click "Names", as shown below.
+○ Ctrl +N -> Names
+Viewing Threads and Stacks
+• ● Malware often uses multiple threads.
+• ● View the current threads within a program by selecting View then Threads
+○ Threads window will come up.
+○ you might need to pause all of the threads
+• ● This window shows the memory locations of the threads and their current status:
+o ○ Active o ○
+Paused o ○
+Suspended
+• ● Since OllyDbg is single-threaded,
+• ○ set a breakpoint,
+• ○ and then continue to run the program in order to begin debugging within a
+particular thread.
+Executing Code
+• ● There are many different ways to execute code in OllyDbg.
+• ● Most popular methods
+https://www.blockchain.com/explorer/addresses/btc/1FfmbHfnpaZjKFvyi1okTjJJusN455paPH
+Blockchain.com
+Home
+Prices
+Charts
+NFTs
+DeFi
+Academy
+News
+Developers
+Wallet
+Exchange
+Bitcoin
+Ethereum
+Bitcoin Cash
+EnglishEspañolPortuguêsPyccкийFrançaisDeutsch
+Sign In
+EURUSDCADGBPRUBCNYINRBRLTRY
+SIlk Road
+FBI
+Base58 (P2PKH) Bitcoin
+Address
+1FfmbHfnpaZjKFvyi1okTjJJusN455paPH
+This address is owned by the FBI and was used in the seizure of
+approximately 144,000 bitcoin from the Silk Road.
+Bitcoin Balance
+1.22367666•$73,214.23
+WalletChart Summary
+This address has transacted 978 times on the Bitcoin blockchain. It has
+received a total of 144343.53580265 BTC $8,636,268,610 and has sent a
+total of 144342.31210254 BTC $8,636,195,396 The current value of this
+address is 1.22367666 BTC $73,214.23.
+Total Received
+144343.53580265 BTC
+$8,636,268,610
+Total Sent
+144342.31210254 BTC
+$8,636,195,396
+Total Volume
+288685.84790518996 BTC
+$17,272,464,006
+Transactions
+978
+Transactions ID:
+c8ea-f25f
+2/22/2024, 19:43:04
+From bc1q-
+yqlq
+To
+FBI 1
+0.00002345 BTC•$1.40
+Fee317 Sats •$0.19
+ID:
+6793-724b
+4/16/2024, 17:57:10
+From bc1q-
+0r6r
+To186 Outputs
+0.00008028 BTC•$4.80
+Fee277.2K Sats •$165.82
+ID:
+b233-5f77
+4/08/2024, 08:54:10
+From
+3JR1-sR9w
+To21 Outputs
+0.00010061 BTC•$6.02
+Fee10.4K Sats •$6.22
+ID:
+51a0-9505
+3/08/2024, 06:31:44
+From16 Inputs
+To34 Outputs
+0.00084587 BTC•$50.61
+Fee219.7K Sats •$131.47
+ID:
+cbf5-4d53
+3/04/2024, 17:20:28
+From bc1q-
+t9vp
+To2 Outputs
+0.00296006 BTC•$177.10
+Fee11.2K Sats •$6.70
+ID:
+38dd-3f96
+1/31/2024, 23:32:57
+From bc1q-
+jq26
+To2 Outputs
+0.00002305 BTC•$1.38
+Fee6.3K Sats •$3.78
+ID:
+7468-6a31
+1/31/2024, 23:28:03
+From
+bc1q-wty0
+To2 Outputs
+0.00002304 BTC•$1.38
+Fee6.3K Sats •$3.78
+ID:
+dc8a-8416
+1/31/2024, 23:18:15
+From4 Inputs
+To2 Outputs
+0.00002306 BTC•$1.38
+Fee15.2K Sats •$9.12
+ID:
+039e-24f8
+1/31/2024, 23:10:46
+From5 Inputs
+To2 Outputs
+0.00002303 BTC•$1.38
+Fee18.2K Sats •$10.90
+ID:
+d923-6c76
+1/05/2024, 15:56:21
+From
+3JmU-atcs
+To10 Outputs
+0.00013553 BTC•$8.11
+Fee96.3K Sats •$57.63
+ID:
+52b0-afe0
+12/25/2023, 01:01:51
+From
+37ta-MSDF
+To16 Outputs
+0.00018809 BTC•$11.25
+Fee126.1K Sats •$75.44
+ID:
+4566-1222
+12/13/2023, 21:41:05
+From bc1q-5u4h
+To23 Outputs
+0.00015945 BTC•$9.54
+Fee196.9K Sats •$117.78
+ID:
+49c2-3461
+12/06/2023, 03:47:14
+From bc1q-
+00gq
+To
+FBI 1
+0.00050536 BTC•$30.24
+Fee38.5K Sats •$23.01
+ID:
+3e72-a68a
+11/29/2023, 13:43:23
+From bc1q-
+qzlu
+To13 Outputs
+0.00016257 BTC•$9.73
+Fee31.9K Sats •$19.07
+ID:
+1e14-3772
+11/28/2023, 12:06:47
+From
+1Y1K-XmoU
+To3 Outputs
+0.00016241 BTC•$9.72
+Fee13.3K Sats •$7.98
+ID:
+84b8-ac2d
+11/28/2023, 05:38:15
+From
+3HT1-8xEr
+To27 Outputs
+0.00010761 BTC•$6.44
+Fee76.5K Sats •$45.76
+ID:
+7054-8dc5
+11/12/2023, 04:45:11
+From bc1q-
+vdns
+To20 Outputs
+0.00029735 BTC•$17.79
+Fee177.9K Sats •$106.46
+ID:
+725e-571f
+10/27/2023, 04:54:26
+From
+3Jr3-eetD
+To251 Outputs
+0.00008835 BTC•$5.29
+Fee287.5K Sats •$172.03
+ID:
+6846-ba66
+9/22/2023, 11:30:03
+From
+3Gst-e4s2
+To18 Outputs
+0.00018744 BTC•$11.21
+Fee27.0K Sats •$16.17
+ID:
+6e9f-bd0e
+9/01/2023, 18:11:48
+From bc1p-
+tu6m
+To3 Outputs
+0.00001000 BTC•$0.60
+Fee3.3K Sats •$1.96
+1
+2
+MINA
+XMR
+SOL Monero
+Solana
+NEM
+0x
+Sandbox
+XEM
+ZRX
+SAND
+Cronos
+CRO
+CRV
+Curve DAO Token
+Icon
+Neutrino
+USD
+ICX
+USDN
+ROSE
+Ethereum
+ROSE
+ETH
+Aave
+AAVE
+Kusam
+a
+AMP
+Cosmos
+Bitcoin
+KSM Cash
+Ethereum
+Classic
+AMP
+ATOM
+BCH
+ETC
+Cardano
+ADA
+Storj
+STORJ
+Gnosis
+IOTA
+Litecoin
+FTX
+GNO
+MIOTA
+LTC
+FTT
+Audius
+
+Decentraland
+MANA
+DCR
+KAVA
+Decred
+Kava
+Secret
+Binance
+USD
+SCRT Yearn.finance
+BUSD
+YFI
+Basic Attention Token
+BAT
+WAVES
+Waves
+XDC XDC
+Network
+Pax
+Dollar
+Terra
+Classic
+Ripple
+USDP
+LUNC
+XRP
+Zcash
+ZEC
+LINK
+Chainlink
+IoTeX
+Infinit y
+IOTX
+Axie
+QTUM Shards
+Dash
+AXS
+QTUM
+DASH
+Harmony
+ONE
+l
+THETA
+Theta Protoco
+OKB
+Symbol
+OKB
+1INCH
+Flow
+XYM
+1INCH
+FLOW
+ApeCoin
+APE
+Bitcoin SV
+BSV
+Avalance
+AVAX
+Internet
+Compute
+Kadena
+Shiba Inu
+ICP
+r
+KDA
+SHIB
+
+HNT
+Helium
+Wrapped Bitcoin
+WBTC
+Tether
+Tronix
+KuCoin
+Token
+Huobi
+Token
+USDT
+TRX
+KCS
+HT
+Moonbeam
+GLMR
+Holo
+Binance
+Coin
+Fantom
+Platform
+Compoun
+d
+HOT
+Polkadot
+BNB
+FTM
+COMP
+DOT
+Pax Gold
+PAXG
+NEO
+Algorand
+Thorchain
+NEO
+Tezos
+EOSIO
+protocol
+ALGO
+RUNE
+XTZ
+EOS
+Elrond
+EGLD
+Bitcoin
+Enjin
+Maker
+protocol
+Convex
+Finance
+BTC
+Uniswap
+ENJ
+MKR
+CVX
+UNI
+
+Execute till Return Option
+● Pauses execution until just before the current function is set to return ○ This can be
+useful when you want a program to pause immediately after the
+current function is finished executing.
+● But if the function never ends, the program will continue to run indefinitely
+The Execute till User Code Option
+• ● Useful if you get lost in library code during debugging
+• ● Program will continue to run until it hit compiled malware code
+○ Typically the .text section
+Stepping Through Code
+● Press Debug then Execute till User Code ● OllyDbg
+provides several ways to step through code.
+• ● OllyDbg offers the two types of stepping described in the previous chapter:
+o ○ Single-stepping (also known as stepping-into) (F7) o ○ Stepping-over (F8)
+• ● Some malware is designed to fool you, by calling routines and never returning,
+so stepping over will miss the most important part.
+• ● For example, if you single-step the instruction call 01007568 , OllyDbg will pause at the
+address 01007568
+Breakpoint & Run &
+○ Because the call instruction transferred EIP to that address.
+Pause
+• ● The simplest options
+• ● You could Run a program and click Pause when it's where you want it to be
+• ● But that's sloppy and might leave you somewhere uninteresting,
+○ such as inside library code.
+• ● Setting breakpoints is much better (F2)
+• ● Run is useful to resume execution after hitting a breakpoint
+• ● Run to Selection option will execute until just before the selected instruction is
+executed
+○ If the selection is never executed, it will run indefinitely
+Types of Breakpoints
+• ● OllyDbg supports all of those types. ○ Software breakpoints
+○ Hardware breakpoints ○ Conditional breakpoints ○ Breakpoints on memory
+Viewing Active Breakpoints
+• ● You can add or remove a breakpoint by selecting the instruction in the disassembler
+window and pressing F2.
+• ● Click View, then Breakpoints,
+• ● or click B icon on toolbar
+OllyDbg Breakpoint Options
+● After you close or terminate a debugged program, OllyDbg will typically save the breakpoint
+locations you set
+○ If you open the same file again, the breakpoints are still available
+Software Breakpoints
+• ● Software breakpoints are particularly useful when debugging a string decoder
+function.
+• ● Malware authors often obfuscate strings
+o ○ With a string decoder that is called before each string is used o ○ Put
+a breakpoint at the end of the decoder routine o ○ The string becomes
+readable on the stack each time you press Play in OllyDbg,
+the program will execute and will break when a string is decoded for use o ○ This method will
+only reveal strings as they are used
+Conditional Breakpoints
+when trying to pause execution once a certain parameter is passed.
+• ● Breaks only when a condition is true
+• ● Conditional software breakpoints can be particularly useful when you want to save
+time
+• ● You can use conditional breakpoints to detect memory allocations above a certain size.
+• ● Breaks only when memory allocations above a certain size.
+Conditional Breakpoints -Poison Ivy backdoor
+● Ex: Poison Ivy
+backdoor
+• ○ Poison Ivy allocates memory to house the shellcode it receives from Command and
+Control (C&C) servers
+• ○ Most memory allocations are for other purposes and uninteresting
+• ○ Set a conditional breakpoint at the VirtualAlloc function in Kernel32.dll
+• ○ if you set a conditional breakpoint when the allocation size is greater than
+100 bytes, the program will not pause when the smaller (and more frequent) memory
+allocations occur.
+• ○ Put a standard breakpoint at the start of the VirtualAlloc function
+■ 4 parameters (Address, Size, AllocationType,Protect)
+Top of the stack is pointed to by the ESP register in order to access the Size field, we must
+reference it in memory as [ESP+8].
+Hardware Breakpoints
+• ● Hardware breakpoints are powerful because they don’t alter your code, stack, or any
+target resource.
+o ○ Don’t slow down execution speed. o ○ Problem with hardware breakpoints is
+that you can set only four at a time.
+o ○ Click Breakpoint, then Hardware, on Execution
+• ● You can set OllyDbg to use hardware breakpoints by default in Debugging Options
+○ Useful if malware uses anti-debugging techniques
+Memory Breakpoints
+• ● Code breaks on access to specified memory location
+• ● OllyDbg supports software and hardware memory breakpoints
+• ● Can break on read, write, execute, or any access
+• ● To set a basic memory breakpoint, select a portion of memory in the memory dump
+window or a section in the memory map
+o ○ Right-click memory location, click Breakpoint, then "Memory, on Access" o ○ You
+can only set one memory breakpoint at a time
+o ○ OllyDbg implements software memory breakpoints by changing the attributes of
+memory blocks
+Patching
+o ○ This technique is not reliable and has considerable overhead o ○ Use memory
+breakpoints sparingly (Carefully).
+● OllyDbg makes it easy to modify just about any live data ○ such as registers and flags.
+● Binary > Edit
+○ Modify instructions or memory by highlighting a region, right-clicking that
+region, and selecting Binary then Edit.
+Binary Edit
+• ● Selecting Binary then Edit
+• ● This will pop up a window for you to add any opcodes or data. • ●
+OllyDbg also has special functions to fill with o ○ 00 entries
+o ○ NOP instructions
+§ Used to skip instructions (To met a condition in if else) § e.g. to force a branch
+Saving Patched Code
+● Right-click disassembler window after patching
+○ Select Copy to Executable then All Modifications as shown at (1)
+• ● This will copy all changes you have made in live memory and pop up a new window
+• ● Then Select Save File, as shown at (2), to save it to disk.
+Following lab will use the same malware/binaries.
+If not downloaded:
+https://drive.google.com/file/d/1fPLZ2ePdSRr5qBjzo1razQiMoBF1GG1d/view?usp=sharing
+8.1 You will run the 1.exe on CMD and you will get 2 as output. Please patch the binary so that
+you will get 8 as the answer.
+Explain your answer. Explain reason behind your answer Screenshot
+is needed !!
+Also saved, patched binary and included in your submission ! You can change the
+.exe with .bin. If you are zipping this, make sure that password is malware.
+8.2 You will run the 2.exe on CMD and you will get 6 as output. Please patch the binary so that
+you will get 3 as the answer.
+Explain your answer. Explain reason behind your answer Screenshot is needed !!
+Also saved, patched binary and included in your submission ! You can change the
+.exe with .bin. If you are zipping this, make sure that password is malware.
+8.3 You will run the 3.exe on CMD and you will get 9 as output. Please patch the binary so that
+you will get the result (number) associated with your name. Explain your answer. Explain
+reason behind your answer Screenshot is needed !!
+Also saved, patched binary and included in your submission ! You can change the
+.exe with .bin. If you are zipping this, make sure that password is malware.
+Student ID Output - Output - 2
+1
+28227 3 72
+33295 2 62
+29456 1 52
+34937 6 88
+34612 16 8721
+28246 14 562
+28370 13 243
+29363 12 71
+27366 18 113
+28057 19 111
+35136 12 112
+29501 14 2
+29181 16 222
+34700 17 21
+35022 18 212
+3053 19 20
+29377 2 99
+34739 21 213
+34791 15 131111
+26490 87 8787
+35125 14 243
+8.4 You will run the 4.exe on CMD and you will get NO!! as output. Please patch the binary so
+that you will get YES!! Without any output!
+Explain your answer. Explain reason behind your answer Screenshot
+is needed !!
+Also saved, patched binary and included in your submission ! You can change the
+.exe with .bin. If you are zipping this, make sure that password is malware.
