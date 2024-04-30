@@ -124,11 +124,15 @@ def main_menu():
             table.add_column("Packed")
             table.add_column("Packing Algorithm")
             for i, section_info in enumerate(pe_info['sections_info'], start=1):
-                print(f"\nSection {i}:")
-                print(f"Name: {section_info['Name']}")
-                print(f"Entropy: {section_info['Entropy']}")
-                print(f"Virtual Size: {section_info['Virtual Size']}")
-                print(f"Raw Size: {section_info['Raw Size']}")
+                section_table = Table(show_header=True, header_style="bold magenta")
+                section_table.add_column("Section Name")
+                section_table.add_column("Entropy")
+                section_table.add_column("Virtual Size")
+                section_table.add_column("Raw Size")
+            
+                row_data_section = [section_info['Name'], str(section_info['Entropy']), str(section_info['Virtual Size']), str(section_info['Raw Size'])]
+                section_table.add_row(*row_data_section)
+                rprint(section_table)
 
             row_data = [
                 filename, 
@@ -169,12 +173,14 @@ def get_tlds():
 def analyze_sections(pe):
     sections_info = []
     for section in pe.sections:
+       
         section_info = {
             "Name": section.Name.decode(errors='ignore'),
             "Entropy": entropy(section.get_data()),
             "Virtual Size": section.Misc_VirtualSize,
             "Raw Size": len(section.get_data())
         }
+        
         sections_info.append(section_info)
     return sections_info
 
