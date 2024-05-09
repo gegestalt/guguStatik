@@ -308,7 +308,7 @@ def analyze_file(filename):
 
         row_data = [filename, file_type, "Yes" if is_protected else "No"]
         
-        if "pdf" in file_type and not is_protected:
+        if "pdf" or "Portable Document Format"in file_type and not is_protected:
             urls, ips, domains = extract_info_from_pdf(filename)
             pdf_page_count = len(PdfReader(filename).pages)
             pdf_page_count= math.ceil(pdf_page_count)
