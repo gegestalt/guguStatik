@@ -40,7 +40,79 @@ d88E`"888E`   8888  888R   d88E`"888E`   8888  888R   x88:  `)8b.   8888    .@88
 4888~  J8%                 4888~  J8%                                                                                   
  ^"===*"`                   ^"===*"`                                                                                   
     ''')
+import os
 
+file_types = {
+    ".exe": "Executable file",
+    ".pdf": "Portable Document Format",
+    ".doc": "Microsoft Word document (pre-2007)",
+    ".docx": "Microsoft Word document",
+    ".xls": "Microsoft Excel spreadsheet (pre-2007)",
+    ".xlsx": "Microsoft Excel spreadsheet",
+    ".ppt": "Microsoft PowerPoint presentation (pre-2007)",
+    ".pptx": "Microsoft PowerPoint presentation",
+    ".zip": "Compressed file archive",
+    ".rar": "RAR archive",
+    ".7z": "7-Zip archive",
+    ".js": "JavaScript file",
+    ".vbs": "VBScript file",
+    ".scr": "Screen saver executable",
+    ".lnk": "Windows shortcut file",
+    ".bat": "Batch file",
+    ".html": "HTML file",
+    ".php": "PHP file",
+    ".swf": "Small Web Format (used for animations)",
+    ".gif": "Graphics Interchange Format file",
+    ".png": "Portable Network Graphics file",
+    ".jpg": "JPEG image file",
+    ".jpeg": "JPEG image file",
+    ".bmp": "Bitmap image file",
+    ".svg": "Scalable Vector Graphics file",
+    ".ps1": "PowerShell script",
+    ".chm": "Compiled HTML Help file",
+    ".xml": "eXtensible Markup Language file",
+    ".rtf": "Rich Text Format file",
+    ".mhtml": "MIME HTML archive file",
+    ".iso": "ISO disc image",
+    ".tar": "Tarball archive file",
+    ".gz": "Gzip compressed file",
+    ".bz2": "Bzip2 archive file",
+    ".dll": "Dynamic Link Library",
+    ".tmp": "Temporary file",
+    ".msp": "Microsoft Patch file",
+    ".msi": "Microsoft Installer package",
+    ".reg": "Registry file",
+    ".hkcu": "HKCU Registry file",
+    ".eml": "Email message file",
+    ".db": "Database file",
+    ".sql": "SQL database file",
+    ".apk": "Android Package file",
+    ".app": "MacOS application",
+    ".vb": "Visual Basic script",
+    ".jar": "Java ARchive",
+    ".java": "Java source file",
+    ".class": "Java class file",
+    ".sh": "Unix shell script",
+    ".py": "Python script",
+    ".rb": "Ruby script",
+    ".ps": "PostScript file",
+    ".eps": "Encapsulated PostScript file",
+    ".mp3": "MP3 audio file",
+    ".wav": "Waveform Audio File Format",
+    ".mp4": "MPEG-4 video file",
+    ".avi": "Audio Video Interleave file",
+    ".mov": "QuickTime Movie file",
+    ".xlsm": "Macro-enabled Excel workbook",
+    ".pub": "Microsoft Publisher document",
+    ".sct": "Windows Script Component",
+    ".wsf": "Windows Script File",
+    ".wsh": "Windows Script Host Settings file",
+    ".ppsx": "PowerPoint Slide Show"
+}
+
+def identify_file_type(file_path):
+    _, extension = os.path.splitext(file_path)
+    return file_types.get(extension.lower(), "Unknown file type")
 def extract_info_from_pdf(file_path):
     with pdfplumber.open(file_path) as pdf:
         text = '\n'.join(page.extract_text() for page in pdf.pages)
@@ -55,9 +127,7 @@ def extract_info_from_pdf(file_path):
 
     return urls, ips, domains
 
-def identify_file_type(file_path):
-    mime = magic.Magic(mime=True)
-    return mime.from_file(file_path)
+
 
 def has_macros(filename):
     vbaparser = VBA_Parser(filename)
