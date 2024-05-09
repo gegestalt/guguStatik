@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #262626; /* Dark gray background */
+            color: #fff; /* White text */
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,9 +18,9 @@
         }
         .container {
             width: 400px;
-            background-color: #fff;
+            background-color: #333; /* Darker gray container */
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Darker shadow */
             padding: 20px;
             opacity: 0;
             animation: fadeInUp 0.5s forwards ease;
@@ -35,7 +36,7 @@
             }
         }
         h1 {
-            color: #333;
+            color: #fff;
             text-align: center;
         }
         form {
@@ -46,14 +47,16 @@
         input[type="file"] {
             margin-bottom: 20px;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #999; /* Lighter gray border */
             border-radius: 5px;
             width: 100%;
             box-sizing: border-box;
             position: relative;
+            background-color: #444; /* Darker gray background for file input */
+            color: #fff; /* White text for file input */
         }
         input[type="submit"] {
-            background-color: #8a2be2;
+            background-color: #8a2be2; /* Purple button */
             color: #fff;
             padding: 10px 20px;
             border: none;
@@ -62,7 +65,7 @@
             transition: background-color 0.3s;
         }
         input[type="submit"]:hover {
-            background-color: #6a1ca8;
+            background-color: #6a1ca8; /* Darker purple hover */
         }
     </style>
 </head>
@@ -82,7 +85,7 @@
         }
         
         document.getElementById("uploadForm").addEventListener("submit", function() {
-            // No loading icon
+    
         });
     </script>
 </body>

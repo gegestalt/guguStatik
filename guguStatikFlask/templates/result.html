@@ -1,14 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis Result</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff; /* Text color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px; /* Adjusted maximum width */
+            background-color: #212121; /* Background color */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards ease;
+            margin-top: 20px;
+            overflow-x: auto; /* Allow horizontal scrolling if needed */
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            color: #fff; /* Heading color */
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #333; /* Table background color */
+            color: #fff; /* Table text color */
+            border-radius: 10px;
+        }
+        th, td {
+            border: 1px solid #555; /* Table cell border color */
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #8a2be2; /* Dark magenta */
+            font-weight: bold;
+        }
+        .back-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-button a {
+            color: #8a2be2; /* Link color */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .back-button a:hover {
+            color: #6a1ca8; /* Hover link color */
+        }
+    </style>
 </head>
-<body class="fade-in">
+<body>
     <div class="container">
         <h1>Analysis Result</h1>
         <table>
