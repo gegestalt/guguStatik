@@ -85,7 +85,6 @@ def is_password_protected(file_path, file_type):
         except py7zr.exceptions.Bad7zFile:
             return True
     
-
     elif "pdf" in file_type:
         try:
             with pdfplumber.open(file_path) as pdf:
