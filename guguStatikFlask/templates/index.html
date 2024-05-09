@@ -2,13 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+        input[type="submit"] {
+            background-color: #8a2be2;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #6a1ca8;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload a File</h1>
-    <form action="/analyze" method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Analyze">
-    </form>
+    <div class="container">
+        <h1>Upload a File</h1>
+        <form id="uploadForm" action="/analyze" method="post" enctype="multipart/form-data">
+            <input id="fileInput" type="file" name="file" onchange="enableAnalyzeButton()">
+            <input id="analyzeButton" type="submit" value="Analyze" disabled>
+        </form>
+    </div>
+
+    <script>
+        function enableAnalyzeButton() {
+            const analyzeButton = document.getElementById("analyzeButton");
+            analyzeButton.disabled = false;
+        }
+        
+        document.getElementById("uploadForm").addEventListener("submit", function() {
+            // No loading icon
+        });
+    </script>
 </body>
 </html>
