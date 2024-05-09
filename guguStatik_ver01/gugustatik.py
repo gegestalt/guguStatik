@@ -156,7 +156,7 @@ def is_password_protected(file_path, file_type):
             return True
     
 
-    elif "pdf" in file_type:
+    elif "pdf" or "Portable Document Format" in file_type:
         try:
             with pdfplumber.open(file_path) as pdf:
                 text = '\n'.join(page.extract_text() for page in pdf.pages)
@@ -307,7 +307,7 @@ def analyze_file(filename):
         table.add_column("Password Protected")
 
         row_data = [filename, file_type, "Yes" if is_protected else "No"]
-
+        
         if "pdf" in file_type and not is_protected:
             urls, ips, domains = extract_info_from_pdf(filename)
             pdf_page_count = len(PdfReader(filename).pages)
