@@ -313,9 +313,9 @@ def analyze():
             "File Path": filename.name,
             "File Type": file_type,
             "Password Protected": "Yes" if is_protected else "No",
-            "URLs": ", ".join(urls),
-            "IP Addresses": ", ".join(ips),
-            "Domain Names": ", ".join(domains),
+            "URLs": ", ".join(urls) if urls else "Not Found",
+            "IP Addresses": ", ".join(ips) if ips else "Not Found",
+            "Domain Names": ", ".join(domains) if domains else "Not Found",
             "Page Count": pdf_page_count
         }
     elif "doc" in file_type and not is_protected:
