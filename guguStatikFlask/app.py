@@ -251,18 +251,28 @@ def analyze_file(filename):
         if "pdf" in file_type and not is_protected:
             urls, ips, domains = extract_info_from_pdf(filename)
             pdf_page_count = len(PdfReader(filename).pages)
-            pdf_page_count= math.ceil(pdf_page_count)
+            pdf_page_count = math.ceil(pdf_page_count)
             table.add_column("URLs")
             table.add_column("IP Addresses")
             table.add_column("Domain Names")
             table.add_column("Page Count")
             row_data.extend([", ".join(urls), ", ".join(ips), ", ".join(domains), (str(pdf_page_count))])
-        elif "doc" in file_type and not is_protected:
+        elif "doc" or "docx" in file_type and not is_protected:
             doc = Document(filename)
-            text = ' '.join(paragraph.text for paragraph in doc.paragraphs)
+            num_pages = 0
+            text = ""
+            prev_paragraph = None
+            for paragraph in doc.paragraphs:
+                if paragraph.text.strip():
+                    # Increment page count if a page break is detected
+                    if prev_paragraph and prev_paragraph.style.name != paragraph.style.name:
+                        num_pages += 1
+                    prev_paragraph = paragraph
+                    # Concatenate text from paragraphs
+                    text += paragraph.text
+
             language = detect(text)
-            num_pages = len(doc.paragraphs)  
-            contains_macros = has_macros(filename)  
+            contains_macros = has_macros(filename)
 
             table.add_column("Language")
             table.add_column("Number of Pages")
@@ -275,6 +285,7 @@ def analyze_file(filename):
 
     rprint(table)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -282,7 +293,7 @@ def index():
 
 
 
-@app.route('/analyze', methods=['POST'])
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     # Get file from form
