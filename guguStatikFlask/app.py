@@ -347,7 +347,6 @@ def extract_info_from_pe():
 
         table.add_row(*row_data)
         
-        # Create a table for sections info
         sections_table = Table(show_header=True, header_style="bold magenta")
         sections_table.add_column("Section Name")
         sections_table.add_column("Entropy")
@@ -418,10 +417,6 @@ def analyze_file(filename):
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-
-
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
