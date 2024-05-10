@@ -90,8 +90,10 @@ def is_password_protected(file_path, file_type):
     elif "7z" in file_type:
         try:
             with py7zr.SevenZipFile(file_path, mode='r') as z:
-                z.test()
+                z.testzip()
         except py7zr.exceptions.Bad7zFile:
+            return True
+        except py7zr.exceptions.PasswordRequired:
             return True
     
     elif "pdf" in file_type:
