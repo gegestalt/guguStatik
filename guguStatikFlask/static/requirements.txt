@@ -1,0 +1,14 @@
+Flask
+rich
+Werkzeug
+python-magic
+pandas
+python-docx
+langdetect
+oletools
+pefile
+PyPDF2
+rarfile
+pdfplumber
+py7zr
+alive-progress

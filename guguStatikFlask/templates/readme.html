@@ -34,69 +34,54 @@
             cursor: pointer;
             transition: background-color 0.3s;
             margin: 0 10px;
-            
         }
 
-
-        .container-wrapper {
-            display: flex;
-            justify-content: center; /* Center containers horizontally */
-            gap: 20px; /* Add gap between containers */
-            margin-top: 60px; /* Add top margin to push containers down below navbar */
-        }
         .container {
-            width: 400px;
+            width: 600px;
             background-color: #333; /* Darker gray container */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Darker shadow */
             padding: 20px;
-            opacity: 0;
-            animation: fadeInUp 0.5s forwards ease;
-            margin-bottom: 20px;
+            opacity: 1;
+            margin-top: 60px; /* Add top margin to push containers down below navbar */
         }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        h1 {
+        h4 {
             color: #fff;
             text-align: center;
+            margin-bottom: 10px;
         }
-        form {
+        code {
+            display: block;
+            background-color: #444;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .download-container {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
-        input[type="file"] {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #999; /* Lighter gray border */
-            border-radius: 5px;
-            width: 100%;
-            box-sizing: border-box;
-            position: relative;
-            background-color: #444; /* Darker gray background for file input */
-            color: #fff; /* White text for file input */
-            outline: none; /* Remove outline */
-        }
-        input[type="submit"] {
-            background-color: #8a2be2; /* Purple button */
+        .download-container button {
+            background-color: #aaa9a4; 
             color: #fff;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            outline: none; /* Remove outline */
         }
-        input[type="submit"]:hover {
-            background-color: #6a1ca8; /* Darker purple hover */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        li {
+            width: calc(50% - 10px); /* Adjust the width as needed */
+            margin-bottom: 10px;
         }
         footer {
             width: 100%;
@@ -120,15 +105,50 @@
             </button>
         </a>
     </div>
-    
+    <div class="container">
+        <h4>
+            Installation Script: 
+        </h4>
+        <code>
+            pip  install -r requirements.txt
+        </code>
+        <!-- Code and download button container -->
+        <div class="download-container">
+            <h4>External Libraries Used:</h4>
+            <a href="/static/requirements.txt" download>
+                <button>Download requirements.txt</button>
+            </a>
+        </div>
+        <ul>
+            <li>ensurepip</li>
+            <li>Flask</li>
+            <li>rich</li>
+            <li>werkzeug</li>
+            <li>magic</li>
+            <li>zipfile</li>
+            <li>urllib</li>
+            <li>pandas</li>
+            <li>docx</li>
+            <li>langdetect</li>
+            <li>oletools</li>
+            <li>pefile</li>
+            <li>math</li>
+            <li>datetime</li>
+            <li>requests</li>
+            <li>string</li>
+            <li>collections</li>
+            <li>PyPDF2</li>
+            <li>rarfile</li>
+            <li>pdfplumber</li>
+            <li>py7zr</li>
+            <li>alive_progress</li>
+            <li>tkinter</li>
+        </ul>
+    </div>
+
     <footer>
         © 2024 File Analysis App
     </footer>
 
-    <script>
-        function enableAnalyzeButton(inputElement) {
-            inputElement.parentNode.querySelector('input[type="submit"]').disabled = false;
-        }
-    </script>
 </body>
 </html>
