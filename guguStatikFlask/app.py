@@ -284,6 +284,13 @@ def analyze_sections(pe):
         sections_info.append(section_info)
     return sections_info
 
+def extract_strings_from_pe(pe):
+    strings = []
+    for section in pe.sections:
+        section_data = section.get_data()
+        section_strings = re.findall(b'[A-Za-z0-9/\-:]{4,}', section_data)
+        strings.extend(section_strings)
+    return strings
 
 @app.route('/extract_info_from_pe', methods=['POST'])
 def extract_info_from_pe():
@@ -292,11 +299,11 @@ def extract_info_from_pe():
         uploaded_file.save(temp_file.name)
         pe = pefile.PE(temp_file.name)
 
-        # Extract information
+        
         tlds = get_tlds()
         with open(temp_file.name, 'rb') as f:
             data = f.read()
-        strings = re.findall(b'[A-Za-z0-9/\-:]{4,}', data)
+        strings=extract_strings_from_pe(pe)
         urls = [s for s in strings if b'http' in s]
         domains = [s for s in strings if any(tld.encode() in s for tld in tlds)]
         ips = [s for s in strings if re.match(b'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', s)]
@@ -357,9 +364,10 @@ def extract_info_from_pe():
             row_data_section = [section_info['Name'], str(section_info['Entropy']), str(section_info['Virtual Size']), str(section_info['Raw Size']), section_info['Packing Algorithm']]
             sections_table.add_row(*row_data_section)
 
-        return render_template('pe_result.html', urls=urls, domains=domains, ips=ips, architecture=architecture, general_entropy=general_entropy,
-                               file_size=file_size, num_sections=num_sections, compilation_date=compilation_date, dlls=dlls,
-                               packed=packed, packing_algorithm=packing_algorithm, sections_info=sections_info)
+    return render_template('pe_result.html', urls=urls, domains=domains, ips=ips, architecture=architecture, general_entropy=general_entropy,
+                        file_size=file_size, num_sections=num_sections, compilation_date=compilation_date, dlls=dlls,
+                        packed=packed, packing_algorithm=packing_algorithm, sections_info=sections_info, strings=strings)
+
 
 
 def analyze_file(filename):
