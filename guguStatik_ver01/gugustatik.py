@@ -301,7 +301,7 @@ def extract_info_from_pe(filename):
     packing_algorithm = 'Unknown'
     sections_info = analyze_sections(pe)
     if packed:
-        packing_algorithm = next(section['Packing Algorithm'] for section in sections_info if section['Packing Algorithm'] != 'Unknown')
+        packing_algorithm = next((section['Packing Algorithm'] for section in sections_info if section['Packing Algorithm'] != 'Unknown'), "Unknown")
     else:
         packing_algorithm = 'Unknown'
     return {
