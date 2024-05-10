@@ -466,6 +466,8 @@ def analyze():
 
 
     return render_template('result.html', result=analysis_result)
-
+@app.route('/readme')
+def readme():
+    return render_template('readme.html')
 if __name__ == '__main__':
     app.run(debug=True)
