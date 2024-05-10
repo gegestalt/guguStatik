@@ -24,6 +24,7 @@
             padding: 20px;
             opacity: 0;
             animation: fadeInUp 0.5s forwards ease;
+            margin-bottom: 20px;
         }
         @keyframes fadeInUp {
             from {
@@ -72,21 +73,23 @@
 <body>
     <div class="container">
         <h1>Upload a File</h1>
-        <form id="uploadForm" action="/analyze" method="post" enctype="multipart/form-data">
-            <input id="fileInput" type="file" name="file" onchange="enableAnalyzeButton()">
-            <input id="analyzeButton" type="submit" value="Analyze" disabled>
+        <form name="generalForm" action="/analyze" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" onchange="enableAnalyzeButton(this)">
+            <input type="submit" value="Analyze" disabled>
+        </form>
+    </div>
+    <div class="container">
+        <h1>Upload an Executable</h1>
+        <form name="executableForm" action="/extract_info_from_pe" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" onchange="enableAnalyzeButton(this)">
+            <input type="submit" value="Analyze" disabled>
         </form>
     </div>
 
     <script>
-        function enableAnalyzeButton() {
-            const analyzeButton = document.getElementById("analyzeButton");
-            analyzeButton.disabled = false;
+        function enableAnalyzeButton(inputElement) {
+            inputElement.parentNode.querySelector('input[type="submit"]').disabled = false;
         }
-        
-        document.getElementById("uploadForm").addEventListener("submit", function() {
-    
-        });
     </script>
 </body>
 </html>

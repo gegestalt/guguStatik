@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PE Analysis Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #212121;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards ease;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 10px;
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #8a2be2;
+            font-weight: bold;
+        }
+        .back-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-button a {
+            color: #8a2be2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .back-button a:hover {
+            color: #6a1ca8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PE Analysis Result</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Architecture</td>
+                    <td>{{ architecture }}</td>
+                </tr>
+                <tr>
+                    <td>General Entropy</td>
+                    <td>{{ general_entropy }}</td>
+                </tr>
+                <tr>
+                    <td>File Size</td>
+                    <td>{{ file_size }}</td>
+                </tr>
+                <tr>
+                    <td>Number of Sections</td>
+                    <td>{{ num_sections }}</td>
+                </tr>
+                <tr>
+                    <td>Compilation Date</td>
+                    <td>{{ compilation_date }}</td>
+                </tr>
+                <tr>
+                    <td>DLLs</td>
+                    <td>{{ dlls }}</td>
+                </tr>
+                <tr>
+                    <td>Packed</td>
+                    <td>{{ packed }}</td>
+                </tr>
+                <tr>
+                    <td>Packing Algorithm</td>
+                    <td>{{ packing_algorithm }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <h2>Sections Information</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Section Name</th>
+                                    <th>Entropy</th>
+                                    <th>Virtual Size</th>
+                                    <th>Raw Size</th>
+                                    <th>Packing Algorithm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for section in sections_info %}
+                                <tr>
+                                    <td>{{ section['Name'] }}</td>
+                                    <td>{{ section['Entropy'] }}</td>
+                                    <td>{{ section['Virtual Size'] }}</td>
+                                    <td>{{ section['Raw Size'] }}</td>
+                                    <td>{{ section['Packing Algorithm'] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="back-button">
+            <a href="/">Back to Index</a>
+        </div>
+    </div>
+</body>
+</html>

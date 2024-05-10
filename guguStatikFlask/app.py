@@ -3,6 +3,8 @@ from flask import Flask, render_template, request
 from rich.console import Console
 from rich.table import Table
 import tempfile
+from werkzeug.utils import secure_filename
+
 import magic
 import zipfile
 import urllib.parse
@@ -182,58 +184,185 @@ def get_tlds():
 
 def analyze_sections(pe):
     sections_info = []
+    packers_sections = {
+        # The packer/protector/tools section names/keywords
+        '.aspack': 'Aspack packer',
+        '.adata': 'Aspack packer/Armadillo packer',
+        'ASPack': 'Aspack packer',
+        '.ASPack': 'ASPAck Protector',
+        '.boom': 'The Boomerang List Builder (config+exe xored with a single byte key 0x77)',
+        '.ccg': 'CCG Packer (Chinese Packer)',
+        '.charmve': 'Added by the PIN tool',
+        'BitArts': 'Crunch 2.0 Packer',
+        'DAStub': 'DAStub Dragon Armor protector',
+        '!EPack': 'Epack packer',
+        'FSG!': 'FSG packer (not a section name, but a good identifier)',
+        '.gentee': 'Gentee installer',
+        'kkrunchy': 'kkrunchy Packer',
+        '.mackt': 'ImpRec-created section',
+        '.MaskPE': 'MaskPE Packer',
+        'MEW': 'MEW packer',
+        '.MPRESS1': 'Mpress Packer',
+        '.MPRESS2': 'Mpress Packer',
+        '.neolite': 'Neolite Packer',
+        '.neolit': 'Neolite Packer',
+        '.nsp1': 'NsPack packer',
+        '.nsp0': 'NsPack packer',
+        '.nsp2': 'NsPack packer',
+        'nsp1': 'NsPack packer',
+        'nsp0': 'NsPack packer',
+        'nsp2': 'NsPack packer',
+        '.packed': 'RLPack Packer (first section)',
+        'pebundle': 'PEBundle Packer',
+        'PEBundle': 'PEBundle Packer',
+        'PEC2TO': 'PECompact packer',
+        'PECompact2': 'PECompact packer (not a section name, but a good identifier)',
+        'PEC2': 'PECompact packer',
+        'pec1': 'PECompact packer',
+        'pec2': 'PECompact packer',
+        'PEC2MO': 'PECompact packer',
+        'PELOCKnt': 'PELock Protector',
+        '.perplex': 'Perplex PE-Protector',
+        'PESHiELD': 'PEShield Packer',
+        '.petite': 'Petite Packer',
+        'petite': 'Petite Packer',
+        '.pinclie': 'Added by the PIN tool',
+        'ProCrypt': 'ProCrypt Packer',
+        '.RLPack': 'RLPack Packer (second section)',
+        '.rmnet': 'Ramnit virus marker',
+        'RCryptor': 'RPCrypt Packer',
+        '.RPCrypt': 'RPCrypt Packer',
+        '.seau': 'SeauSFX Packer',
+        '.sforce3': 'StarForce Protection',
+        '.spack': 'Simple Pack (by bagie)',
+        '.svkp': 'SVKP packer',
+        'Themida': 'Themida Packer',
+        '.Themida': 'Themida Packer',
+        'Themida ': 'Themida Packer',
+        '.taz': 'Some version os PESpin',
+        '.tsuarch': 'TSULoader',
+        '.tsustub': 'TSULoader',
+        '.packed': 'Unknown Packer',
+        'PEPACK!!': 'Pepack',
+        '.Upack': 'Upack packer',
+        '.ByDwing': 'Upack Packer',
+        'UPX0': 'UPX packer',
+        'UPX1': 'UPX packer',
+        'UPX2': 'UPX packer',
+        'UPX!': 'UPX packer',
+        '.UPX0': 'UPX Packer',
+        '.UPX1': 'UPX Packer',
+        '.UPX2': 'UPX Packer',
+        '.vmp0': 'VMProtect packer',
+        '.vmp1': 'VMProtect packer',
+        '.vmp2': 'VMProtect packer',
+        'VProtect': 'Vprotect Packer',
+        '.winapi': 'Added by API Override tool',
+        'WinLicen': 'WinLicense (Themida) Protector',
+        '_winzip_': 'WinZip Self-Extractor',
+        '.WWPACK': 'WWPACK Packer',
+        '.yP': 'Y0da Protector',
+        '.y0da': 'Y0da Protector',
+    }
+   
+
     for section in pe.sections:
-       
+        section_name = section.Name.decode(errors='ignore')
+        section_entropy = entropy(section.get_data())
+        virtual_size = section.Misc_VirtualSize
+        raw_size = len(section.get_data())
+
+        packing_algorithm = packers_sections.get(section_name, 'Unknown')
         section_info = {
-            "Name": section.Name.decode(errors='ignore'),
-            "Entropy": entropy(section.get_data()),
-            "Virtual Size": section.Misc_VirtualSize,
-            "Raw Size": len(section.get_data())
+            "Name": section_name,
+            "Entropy": section_entropy,
+            "Virtual Size": virtual_size,
+            "Raw Size": raw_size,
+            "Packing Algorithm":packing_algorithm
         }
-        
+
         sections_info.append(section_info)
     return sections_info
 
-def extract_info_from_pe(filename):
-    pe = pefile.PE(filename)
 
-    # 3.1
-    tlds = get_tlds()
-    with open(filename, 'rb') as f:
-        data = f.read()
-    strings = re.findall(b'[A-Za-z0-9/\-:]{4,}', data)
-    urls = [s for s in strings if b'http' in s]
-    domains = [s for s in strings if any(tld.encode() in s for tld in tlds)]
-    ips = [s for s in strings if re.match(b'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', s)]
+@app.route('/extract_info_from_pe', methods=['POST'])
+def extract_info_from_pe():
+    uploaded_file = request.files['file']
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        uploaded_file.save(temp_file.name)
+        pe = pefile.PE(temp_file.name)
 
-    # 3.2
-    architecture = 'x86' if pe.FILE_HEADER.Machine == 0x014c else 'x86-x64' if pe.FILE_HEADER.Machine == 0x8664 else 'Unknown'
-    general_entropy = entropy(data)
-    file_size = len(data)
-    num_sections = len(pe.sections)
-    sections = [(s.Name, entropy(s.get_data()), s.Misc_VirtualSize, len(s.get_data())) for s in pe.sections]
-    compilation_date = datetime.datetime.fromtimestamp(pe.FILE_HEADER.TimeDateStamp)
-    dlls = [entry.dll for entry in pe.DIRECTORY_ENTRY_IMPORT]
+        # Extract information
+        tlds = get_tlds()
+        with open(temp_file.name, 'rb') as f:
+            data = f.read()
+        strings = re.findall(b'[A-Za-z0-9/\-:]{4,}', data)
+        urls = [s for s in strings if b'http' in s]
+        domains = [s for s in strings if any(tld.encode() in s for tld in tlds)]
+        ips = [s for s in strings if re.match(b'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', s)]
 
-    # 3.3
-    packed = any(s.get_entropy() > 7 for s in pe.sections)
-    packing_algorithm = 'Unknown'
-    sections_info = analyze_sections(pe)
-    return {
-        'urls': urls,
-        'domains': domains,
-        'ips': ips,
-        'architecture': architecture,
-        'general_entropy': general_entropy,
-        'file_size': file_size,
-        'num_sections': num_sections,
-        'sections': sections,
-        'compilation_date': compilation_date,
-        'dlls': dlls,
-        'packed': packed,
-        'packing_algorithm': packing_algorithm,
-        'sections_info': sections_info,
-    }
+        architecture = 'x86' if pe.FILE_HEADER.Machine == 0x014c else 'x86-x64' if pe.FILE_HEADER.Machine == 0x8664 else 'Unknown'
+        general_entropy = entropy(data)
+        file_size = len(data)
+        num_sections = len(pe.sections)
+        sections = [(s.Name, entropy(s.get_data()), s.Misc_VirtualSize, len(s.get_data())) for s in pe.sections]
+        compilation_date = datetime.datetime.fromtimestamp(pe.FILE_HEADER.TimeDateStamp)
+        dlls = [entry.dll for entry in pe.DIRECTORY_ENTRY_IMPORT]
+
+        packed = any(s.get_entropy() > 7 for s in pe.sections)
+        packing_algorithm = 'Unknown'
+        sections_info = analyze_sections(pe)
+        if packed:
+            packing_algorithm = next((section['Packing Algorithm'] for section in sections_info if section['Packing Algorithm'] != 'Unknown'), "Unknown")
+        else:
+            packing_algorithm = 'Unknown'
+        dlls = [dll.decode('utf-8') for dll in dlls]
+
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("URLs")
+        table.add_column("Domains")
+        table.add_column("IPs")
+        table.add_column("Architecture")
+        table.add_column("General Entropy")
+        table.add_column("File Size")
+        table.add_column("Number of Sections")
+        table.add_column("Compilation Date")
+        table.add_column("DLLs")
+        table.add_column("Packed")
+        table.add_column("Packing Algorithm")
+        
+        row_data = [
+            str(urls), 
+            str(domains), 
+            str(ips), 
+            architecture, 
+            str(general_entropy), 
+            str(file_size), 
+            str(num_sections), 
+            str(compilation_date), 
+            str(dlls), 
+            str(packed), 
+            packing_algorithm
+        ]
+
+        table.add_row(*row_data)
+        
+        # Create a table for sections info
+        sections_table = Table(show_header=True, header_style="bold magenta")
+        sections_table.add_column("Section Name")
+        sections_table.add_column("Entropy")
+        sections_table.add_column("Virtual Size")
+        sections_table.add_column("Raw Size")
+        sections_table.add_column("Packing Algorithm")
+        for section_info in sections_info:
+            row_data_section = [section_info['Name'], str(section_info['Entropy']), str(section_info['Virtual Size']), str(section_info['Raw Size']), section_info['Packing Algorithm']]
+            sections_table.add_row(*row_data_section)
+
+        return render_template('pe_result.html', urls=urls, domains=domains, ips=ips, architecture=architecture, general_entropy=general_entropy,
+                               file_size=file_size, num_sections=num_sections, compilation_date=compilation_date, dlls=dlls,
+                               packed=packed, packing_algorithm=packing_algorithm, sections_info=sections_info)
+
+
 def analyze_file(filename):
     with alive_bar(4, title='Analyzing...') as bar:
         file_type = identify_file_type(filename)
