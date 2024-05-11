@@ -1,5 +1,5 @@
 from ensurepip import bootstrap
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
 from rich.console import Console
 from rich.table import Table
 import tempfile
@@ -50,13 +50,44 @@ d88E`"888E`   8888  888R   d88E`"888E`   8888  888R   x88:  `)8b.   8888    .@88
     ''')
 app = Flask(__name__)
 app.static_folder = 'static'
+api_key = "a468dec43448580f46c2f928fa08cb52ab9397b0acdb090eaeadb3bfea6fa6e9"
+def submit_file_to_virustotal(filename):
+    url = "https://www.virustotal.com/api/v3/files"
+    files = {"file": (filename, open(filename, "rb"), "application/x-msdownload")}
+    headers = {"accept": "application/json", "x-apikey": api_key}
 
+    response = requests.post(url, files=files, headers=headers)
+    return response.json()
+
+def get_analysis_results(analysis_id):
+    url = f"https://www.virustotal.com/api/v3/analyses/{analysis_id}"
+    headers = {"accept": "application/json", "x-apikey": api_key}
+
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+
+@app.route("/vt_analysis", methods=["POST"])
+def submit_file():
+    if request.method == "POST":
+        file = request.files["file"]
+        filename = file.filename
+        file.save(filename)  
+        response = submit_file_to_virustotal(filename)
+        analysis_id = response["data"]["id"]
+        return redirect(url_for('display_results', analysis_id=analysis_id))
+
+@app.route("/results/<analysis_id>")
+def display_results(analysis_id):
+    response = get_analysis_results(analysis_id)
+    results = response["data"]["attributes"]["results"]
+    return render_template("vt_report.html", results=results)
 
 def extract_info_from_pdf(file_path):
     with pdfplumber.open(file_path) as pdf:
         text = '\n'.join(page.extract_text() for page in pdf.pages)
 
-        # Write the extracted text to a .txt file
         with open('extracted_text.txt', 'w') as f:
             f.write(text)
 

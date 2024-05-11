@@ -142,7 +142,7 @@
     </div>
     <div class="container" id="thirdContainer">
         <h1>Virus Total Analysis</h1>
-        <form name="thirdForm" action="/process_third" method="post">
+        <form name="thirdForm" action="/vt_analysis" method="post" enctype="multipart/form-data">
                 <input type="file" name="file" onchange="enableAnalyzeButton(this)">
                 
                 <input type="submit" value="Analyze on VT" disabled>
