@@ -36,7 +36,7 @@
             margin: 0 10px;
             
         }
-
+        
 
         .container-wrapper {
             display: flex;
@@ -127,7 +127,7 @@
             <h1>Upload a File</h1>
             <form name="generalForm" action="/analyze" method="post" enctype="multipart/form-data">
                 <input type="file" name="file" onchange="enableAnalyzeButton(this)">
-                <input type="submit" value="Analyze" disabled>
+                <input type="submit" value="Analyze Non-Executable" disabled>
             </form>
         </div>
         <div class="container" id="executableUploadContainer">
@@ -135,9 +135,19 @@
             <form name="executableForm" action="/extract_info_from_pe" method="post" enctype="multipart/form-data">
                 <input type="file" name="file" onchange="enableAnalyzeButton(this)">
                 
-                <input type="submit" value="Analyze" disabled>
+                <input type="submit" value="Analyze Executable" disabled>
             </form>
         </div>
+
+    </div>
+    <div class="container" id="thirdContainer">
+        <h1>Virus Total Analysis</h1>
+        <form name="thirdForm" action="/process_third" method="post">
+                <input type="file" name="file" onchange="enableAnalyzeButton(this)">
+                
+                <input type="submit" value="Analyze on VT" disabled>
+            </form>
+        </form>
     </div>
 
     <footer>

@@ -15,11 +15,11 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Set min-height to ensure footer stays at the bottom */
+            min-height: 100vh; 
         }
         .navbar {
             width: 100%;
-            background-color: #333; /* Darker gray navbar */
+            background-color: #333; 
             padding: 10px 0;
             text-align: left;
             position: fixed; 
@@ -38,12 +38,13 @@
 
         .container {
             width: 600px;
-            background-color: #333; /* Darker gray container */
+            background-color: #333; 
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Darker shadow */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
             padding: 20px;
             opacity: 1;
-            margin-top: 60px; /* Add top margin to push containers down below navbar */
+            animation: fadeInUp 0.5s forwards ease;
+            margin-top: 60px; 
         }
         h4 {
             color: #fff;
@@ -70,6 +71,16 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         ul {
             list-style-type: none;
