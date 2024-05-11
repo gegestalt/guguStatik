@@ -7,44 +7,126 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #212121;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards ease;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         h1 {
+            color: #fff;
             text-align: center;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 10px;
         }
         th, td {
-            padding: 8px;
+            border: 1px solid #555;
+            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #8a2be2;
+            font-weight: bold;
         }
-        tr:hover {
-            background-color: #f5f5f5;
+        .back-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-button a {
+            color: #8a2be2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .back-button a:hover {
+            color: #6a1ca8;
         }
     </style>
 </head>
 <body>
-    <h1>Analysis Results</h1>
-    <table>
-        <tr>
-            <th>Engine Name</th>
-            <th>Category</th>
-            <th>Result</th>
-        </tr>
-        {% for engine, data in results.items() %}
-        <tr>
-            <td>{{ engine }}</td>
-            <td>{{ data.category }}</td>
-            <td>{{ data.result }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <h1>Analysis Results</h1>
+        <h2>Attributes</h2>
+        <p>Date: {{ attributes.date }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Statistic</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in attributes.stats.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Engine Name</th>
+                    <th>Engine Version</th>
+                    <th>Engine Update</th>
+                    <th>Category</th>
+                    <th>Result</th>
+                    <th>Method</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for engine, data in results.items() %}
+                <tr>
+                    <td>{{ engine }}</td>
+                    <td>{{ data.engine_version }}</td>
+                    <td>{{ data.engine_update }}</td>
+                    <td>{{ data.category }}</td>
+                    <td>{{ data.result }}</td>
+                    <td>{{ data.method }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Meta</h2>
+        <p>SHA256: {{ meta.file_info.sha256 }}</p>
+        <p>MD5: {{ meta.file_info.md5 }}</p>
+        <p>SHA1: {{ meta.file_info.sha1 }}</p>
+        <p>Size: {{ meta.file_info.size }}</p>
+        <div class="back-button">
+            <a href="/">Back to Index</a>
+        </div>
+    </div>
 </body>
 </html>
