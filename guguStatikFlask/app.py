@@ -1,4 +1,5 @@
 from ensurepip import bootstrap
+import os
 from flask import Flask, redirect, render_template, request, url_for
 from rich.console import Console
 from rich.table import Table
@@ -49,6 +50,13 @@ d88E`"888E`   8888  888R   d88E`"888E`   8888  888R   x88:  `)8b.   8888    .@88
  ^"===*"`                   ^"===*"`                                                                                   
     ''')
 app = Flask(__name__)
+UPLOAD_FOLDER = 'uploads'
+
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.static_folder = 'static'
 api_key = "a468dec43448580f46c2f928fa08cb52ab9397b0acdb090eaeadb3bfea6fa6e9"
 def submit_file_to_virustotal(filename):
@@ -68,23 +76,29 @@ def get_analysis_results(analysis_id):
 
 
 
+from werkzeug.utils import secure_filename
+
 @app.route("/vt_analysis", methods=["POST"])
 def submit_file():
     if request.method == "POST":
         file = request.files["file"]
-        filename = file.filename
-        file.save(filename)  
-        response = submit_file_to_virustotal(filename)
-        analysis_id = response["data"]["id"]
-        return redirect(url_for('display_results', analysis_id=analysis_id))
+        if file:
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            response = submit_file_to_virustotal(file_path)
+            analysis_id = response["data"]["id"]
+            return redirect(url_for('display_results', analysis_id=analysis_id))
+        else:
+            return "No file received", 400
 
-@app.route("/results/<analysis_id>")
+@app.route("/results/<analysis_id>",methods=["GET"])
 def display_results(analysis_id):
-    response = get_analysis_results(analysis_id)
-    results = response["data"]["attributes"]["results"]
-    attributes = response["data"]["attributes"]
-    meta = response.get("meta", {}) 
-    return render_template("vt_report.html", results=results,meta=meta,attributes=attributes)
+        response = get_analysis_results(analysis_id)
+        results = response["data"]["attributes"]["results"]
+        attributes = response["data"]["attributes"]
+        meta = response.get("meta", {}) 
+        return render_template("vt_report.html", results=results,meta=meta,attributes=attributes)
 
 def extract_info_from_pdf(file_path):
     with pdfplumber.open(file_path) as pdf:
