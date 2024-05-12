@@ -232,7 +232,6 @@ def get_tlds():
 def analyze_sections(pe):
     sections_info = []
     packers_sections = {
-        # The packer/protector/tools section names/keywords
         '.aspack': 'Aspack packer',
         '.adata': 'Aspack packer/Armadillo packer',
         'ASPack': 'Aspack packer',
@@ -447,11 +446,9 @@ def analyze_file(filename):
             prev_paragraph = None
             for paragraph in doc.paragraphs:
                 if paragraph.text.strip():
-                    # Increment page count if a page break is detected
                     if prev_paragraph and prev_paragraph.style.name != paragraph.style.name:
                         num_pages += 1
                     prev_paragraph = paragraph
-                    # Concatenate text from paragraphs
                     text += paragraph.text
 
             language = detect(text)
@@ -475,12 +472,9 @@ def index():
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    # Get file from form
     uploaded_file = request.files['file']
     filename = tempfile.NamedTemporaryFile(delete=False)
     uploaded_file.save(filename.name)
-
-    # Analyze file
     file_type = identify_file_type(filename.name)
     is_protected = is_password_protected(filename.name, file_type)
 
